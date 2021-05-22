@@ -55,8 +55,18 @@ fn main() {
     loop {
         let result = child.try_wait();
 
-        if result.is_err() { break; }
-        if result.ok().is_some() { break; }
+        if result.is_err() {
+            println!("[!] shell errored out");
+            break;
+        }
+        else if result.is_ok() {
+            let exit_code = result.unwrap();
+
+            if exit_code.is_some() {
+                println!("[!] shell exited ({:?})", exit_code);
+                break;
+            }
+        }
 
         let mut peek_buffer = [0u8; 1];
         let peek = stream.peek(&mut peek_buffer);
