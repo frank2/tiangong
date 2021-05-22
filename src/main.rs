@@ -3,7 +3,7 @@ use std::net::{Shutdown, TcpStream};
 #[cfg(all(target_os="windows"))]
 use std::os::windows::io::{RawHandle, FromRawHandle, AsRawSocket};
 #[cfg(not(target_os="windows"))]
-use std::os::unix::io::AsRawFd;
+use std::os::unix::io::{AsRawFd, FromRawFd, RawFd};
 use std::process::{Command, Stdio};
 use std::thread::sleep;
 use std::time::Duration;
